@@ -17,11 +17,8 @@ package com.loveplusplus.update;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import com.loveplusplus.update.R;
 import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
 
 /**
