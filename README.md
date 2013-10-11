@@ -11,11 +11,11 @@ Android应用自动更新库(android-auto-update)
 
 - 使用Dialog
    
-    UpdateChecker.checkForDialog(this);
+    	`UpdateChecker.checkForDialog(this);`
 
 - 使用Notification
 
-	UpdateChecker.checkForNotification(this);
+	`UpdateChecker.checkForNotification(this);`
 
 
 
@@ -32,14 +32,14 @@ Android应用自动更新库(android-auto-update)
 	`<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />`
 
 #### 3.截图 ####
-![dialog](screenshots\sample.png)
-![dialog](screenshots\sample_htc.png)
-![dialog](screenshots\dialog.png)
-![dialog](screenshots\dialog_htc.png)
-![dialog](screenshots\notification.png)
-![dialog](screenshots\notification_avd.png)
-![dialog](screenshots\downloading.png)
-![dialog](screenshots\downloading_avd.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/sample.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/sample_htc.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/dialog.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/dialog_htc.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/notification.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/notification_avd.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/downloading.png)
+![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/downloading_avd.png)
 
 
 #### 4.使用与参考的开源项目 ####
