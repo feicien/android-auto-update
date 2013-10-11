@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">updatechecker</string>
+    <string name="newUpdateAvailable">发现新版本</string>
+    <string name="dialogPositiveButton">立即下载</string>
+    <string name="dialogNegativeButton">以后再说</string>
+    
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="repo_url">https://github.com/rampo/UpdateChecker</string>
+    <string name="credits">UpdateChecker was written by %1$s.</string>
+    <string name="profile_url">https://plus.google.com/110441803915933521642/posts</string>
+    <string name="attributions">This app uses software licensed under the %1$s. Further information can be seen in the app\'s source code on %2$s.</string>
+    <string name="feedback">Feel free to provide feedback (bugs, etc) and pull requests on %1$s. Also further documentation is available there.</string>
+    <string name="info">This app has the same package of ActionBarSherlock: Demos because the library, to works, need a published app on Play Store. All credits to Jake Wharton\'s %1$s.</string>
+
+</resources>
