@@ -1,19 +1,15 @@
-/*
- * Copyright (C) 2013 Pietro Rampini "Rampo" - Piko Technologies
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.loveplusplus.update;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.zip.GZIPInputStream;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -21,7 +17,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,27 +28,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.github.kevinsawicki.http.HttpRequest;
-import com.google.gson.Gson;
-import com.loveplusplus.update.R;
-
 public class UpdateChecker extends Fragment {
 
-	private static final String LOG_TAG = "UpdateChecker";
-	private static final String NOTIFICATION_ICON_RES_ID_KEY = "resId";
-	private static final String INT_OF_LAUNCHES_PREF_KEY = "nLaunches";
+	//private static final String NOTIFICATION_ICON_RES_ID_KEY = "resId";
 	private static final String NOTICE_TYPE_KEY = "type";
-	private static final String SUCCESSFUL_CHECKS_REQUIRED_KEY = "nChecks";
-	private static final String PREFS_FILENAME = "updateChecker";
+	//private static final String SUCCESSFUL_CHECKS_REQUIRED_KEY = "nChecks";
 	private static final int NOTICE_NOTIFICATION = 2;
 	private static final int NOTICE_DIALOG = 1;
 	private static final String TAG = "UpdateChecker";
 
 	private FragmentActivity mContext;
 	private Thread mThread;
-	private int mSuccessfulChecksRequired;
 	private int mTypeOfNotice;
-	private int mNotificationIconResId;
 
 	/**
 	 * Show a Dialog if an update is available for download. Callable in a
@@ -68,115 +54,35 @@ public class UpdateChecker extends Fragment {
 		UpdateChecker updateChecker = new UpdateChecker();
 		Bundle args = new Bundle();
 		args.putInt(NOTICE_TYPE_KEY, NOTICE_DIALOG);
-		args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, 5);
+		//args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, 5);
 		updateChecker.setArguments(args);
 		content.add(updateChecker, null).commit();
 	}
 
-	/**
-	 * Show a Dialog if an update is available for download. Callable in a
-	 * FragmentActivity. Specify the number of checks after the dialog will be
-	 * shown.
-	 * 
-	 * @param fragmentActivity
-	 *            Required.
-	 * @param successfulChecksRequired
-	 *            the number of checks after the dialog will be shown.
-	 */
-	public static void checkForDialog(FragmentActivity fragmentActivity, int successfulChecksRequired) {
-		FragmentTransaction content = fragmentActivity.getSupportFragmentManager().beginTransaction();
-		UpdateChecker updateChecker = new UpdateChecker();
-		Bundle args = new Bundle();
-		args.putInt(NOTICE_TYPE_KEY, NOTICE_DIALOG);
-		args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, successfulChecksRequired);
-		updateChecker.setArguments(args);
-		content.add(updateChecker, null).commit();
-	}
+	
 
 	/**
 	 * Show a Notification if an update is available for download. Callable in a
-	 * FragmentActivity Number of checks after the notification will be shown:
-	 * default, 5
+	 * FragmentActivity Specify the number of checks after the notification will
+	 * be shown.
 	 * 
 	 * @param fragmentActivity
 	 *            Required.
+	 * @param notificationIconResId
+	 *            R.drawable.* resource to set to Notification Icon.
 	 */
 	public static void checkForNotification(FragmentActivity fragmentActivity) {
 		FragmentTransaction content = fragmentActivity.getSupportFragmentManager().beginTransaction();
 		UpdateChecker updateChecker = new UpdateChecker();
 		Bundle args = new Bundle();
 		args.putInt(NOTICE_TYPE_KEY, NOTICE_NOTIFICATION);
-		args.putInt(NOTIFICATION_ICON_RES_ID_KEY, R.drawable.ic_stat_ic_menu_play_store);
-		args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, 5);
+		//args.putInt(NOTIFICATION_ICON_RES_ID_KEY, notificationIconResId);
+		//args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, 5);
 		updateChecker.setArguments(args);
 		content.add(updateChecker, null).commit();
 	}
 
-	/**
-	 * Show a Notification if an update is available for download. Callable in a
-	 * FragmentActivity Specify the number of checks after the notification will
-	 * be shown.
-	 * 
-	 * @param fragmentActivity
-	 *            Required.
-	 * @param successfulChecksRequired
-	 *            the number of checks after the notification will be shown.
-	 */
-	public static void checkForNotification(FragmentActivity fragmentActivity, int successfulChecksRequired) {
-		FragmentTransaction content = fragmentActivity.getSupportFragmentManager().beginTransaction();
-		UpdateChecker updateChecker = new UpdateChecker();
-		Bundle args = new Bundle();
-		args.putInt(NOTICE_TYPE_KEY, NOTICE_NOTIFICATION);
-		args.putInt(NOTIFICATION_ICON_RES_ID_KEY, R.drawable.ic_stat_ic_menu_play_store);
-		args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, successfulChecksRequired);
-		updateChecker.setArguments(args);
-		content.add(updateChecker, null).commit();
-	}
-
-	/**
-	 * Show a Notification if an update is available for download. Callable in a
-	 * FragmentActivity Specify the number of checks after the notification will
-	 * be shown.
-	 * 
-	 * @param fragmentActivity
-	 *            Required.
-	 * @param notificationIconResId
-	 *            R.drawable.* resource to set to Notification Icon.
-	 */
-	public static void checkForNotification(int notificationIconResId, FragmentActivity fragmentActivity) {
-		FragmentTransaction content = fragmentActivity.getSupportFragmentManager().beginTransaction();
-		UpdateChecker updateChecker = new UpdateChecker();
-		Bundle args = new Bundle();
-		args.putInt(NOTICE_TYPE_KEY, NOTICE_NOTIFICATION);
-		args.putInt(NOTIFICATION_ICON_RES_ID_KEY, notificationIconResId);
-		args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, 5);
-		updateChecker.setArguments(args);
-		content.add(updateChecker, null).commit();
-	}
-
-	/**
-	 * Show a Notification if an update is available for download. Set the
-	 * notificationIcon Resource Id. Callable in a FragmentActivity Specify the
-	 * number of checks after the notification will be shown.
-	 * 
-	 * @param fragmentActivity
-	 *            Required
-	 * @param successfulChecksRequired
-	 *            the number of checks after the notification will be shown.
-	 * @param notificationIconResId
-	 *            R.drawable.* resource to set to Notification Icon.
-	 */
-	public static void checkForNotification(FragmentActivity fragmentActivity, int successfulChecksRequired, int notificationIconResId) {
-		FragmentTransaction content = fragmentActivity.getSupportFragmentManager().beginTransaction();
-		UpdateChecker updateChecker = new UpdateChecker();
-		Bundle args = new Bundle();
-		args.putInt(NOTICE_TYPE_KEY, NOTICE_NOTIFICATION);
-		args.putInt(NOTIFICATION_ICON_RES_ID_KEY, notificationIconResId);
-		args.putInt(SUCCESSFUL_CHECKS_REQUIRED_KEY, successfulChecksRequired);
-		updateChecker.setArguments(args);
-		content.add(updateChecker, null).commit();
-	}
-
+	
 	/**
 	 * This class is a Fragment. Check for the method you have chosen.
 	 */
@@ -186,8 +92,8 @@ public class UpdateChecker extends Fragment {
 		mContext = (FragmentActivity) activity;
 		Bundle args = getArguments();
 		mTypeOfNotice = args.getInt(NOTICE_TYPE_KEY);
-		mSuccessfulChecksRequired = args.getInt(SUCCESSFUL_CHECKS_REQUIRED_KEY);
-		mNotificationIconResId = args.getInt(NOTIFICATION_ICON_RES_ID_KEY);
+		//mSuccessfulChecksRequired = args.getInt(SUCCESSFUL_CHECKS_REQUIRED_KEY);
+		//mNotificationIconResId = args.getInt(NOTIFICATION_ICON_RES_ID_KEY);
 		checkForUpdates();
 	}
 
@@ -199,60 +105,109 @@ public class UpdateChecker extends Fragment {
 		mThread = new Thread() {
 			@Override
 			public void run() {
-				if (isNetworkAvailable(mContext)) {
+				//if (isNetworkAvailable(mContext)) {
 
-					HttpRequest request = HttpRequest.post("http://192.168.1.115:8080/mlhwggl/api/app/update");
-					String json = request.body();
-					finalStep(json);
-				}
+					String json = sendPost();
+					if(json!=null){
+						parseJson(json);
+					}else{
+						Log.e(TAG, "can't get app update json");
+					}
+				//}
 			}
 
 		};
 		mThread.start();
 	}
 
-	/**
-	 * If the version dowloadable from the Play Store is different from the
-	 * versionName installed notify it to the user.
-	 * 
-	 * @param versionDownloadable
-	 *            String to compare to versionName of the app.
-	 * @see UpdateChecker#CheckForDialog(android.support.v4.app.FragmentActivity)
-	 * @see UpdateChecker#CheckForNotification(android.support.v4.app.FragmentActivity)
-	 */
-	private void finalStep(String json) {
+	protected String sendPost() {
+		HttpURLConnection uRLConnection = null;
+		InputStream is = null;
+		BufferedReader buffer = null;
+		String result = null;
+		try {
+			URL url = new URL(Constants.APP_UPDATE_SERVER_URL);
+			uRLConnection = (HttpURLConnection) url.openConnection();
+			uRLConnection.setDoInput(true);
+			uRLConnection.setDoOutput(true);
+			uRLConnection.setRequestMethod("POST");
+			uRLConnection.setUseCaches(false);
+			uRLConnection.setConnectTimeout(10 * 1000);
+			uRLConnection.setReadTimeout(10 * 1000);
+			uRLConnection.setInstanceFollowRedirects(false);
+			uRLConnection.setRequestProperty("Connection", "Keep-Alive");
+			uRLConnection.setRequestProperty("Charset", "UTF-8");
+			uRLConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+			uRLConnection.setRequestProperty("Content-Type", "application/json");
+
+			uRLConnection.connect();
+
+			
+			is = uRLConnection.getInputStream();
+
+			String content_encode = uRLConnection.getContentEncoding();
+
+			if (null != content_encode && !"".equals(content_encode) && content_encode.equals("gzip")) {
+				is = new GZIPInputStream(is);
+			}
+
+			buffer = new BufferedReader(new InputStreamReader(is));
+			StringBuilder strBuilder = new StringBuilder();
+			String line;
+			while ((line = buffer.readLine()) != null) {
+				strBuilder.append(line);
+			}
+			result = strBuilder.toString();
+		} catch (Exception e) {
+			Log.e(TAG, "http post error", e);
+		} finally {
+			if(buffer!=null){
+				try {
+					buffer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(is!=null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(uRLConnection!=null){
+				uRLConnection.disconnect();
+			}
+		}
+		return result;
+	}
+
+	
+	private void parseJson(String json) {
 		mThread.interrupt();
 		Looper.prepare();
 		try {
+			
+			JSONObject obj = new JSONObject(json);
+			String updateMessage = obj.getString(Constants.APK_UPDATE_CONTENT);
+			String apkUrl = obj.getString(Constants.APK_DOWNLOAD_URL);
+			int apkCode = obj.getInt(Constants.APK_VERSION_CODE);
 
-			// if (!versionDownloadable.equals()) { // New
-			// // Available
-			// if (iDontWantToBeTooMuchInvasive(versionDownloadable)) {
-			// if (mTypeOfNotice == NOTICE_NOTIFICATION) {
-			// showNotification();
-			// } else if (mTypeOfNotice == NOTICE_DIALOG) {
-			// showDialog();
-			// }
-			// }
-			// } else {
-			//
-			// } // No new update available
-
-			Gson gson = new Gson();
-			AppVersionInfo info = gson.fromJson(json, AppVersionInfo.class);
 			int versionCode = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
 
-			if (info.versionCode > versionCode) {
+			if (apkCode > versionCode) {
 				if (mTypeOfNotice == NOTICE_NOTIFICATION) {
-					showNotification(info);
+					showNotification(updateMessage,apkUrl);
 				} else if (mTypeOfNotice == NOTICE_DIALOG) {
-					showDialog(info);
+					showDialog(updateMessage,apkUrl);
 				}
 			} else {
-				Log.d(TAG, "最新版本");
+				//Toast.makeText(mContext, mContext.getString(R.string.app_no_new_update), Toast.LENGTH_SHORT).show();
 			}
 
 		} catch (PackageManager.NameNotFoundException ignored) {
+		} catch (JSONException e) {
+			Log.e(TAG, "parse json error", e);
 		}
 	}
 
@@ -261,15 +216,13 @@ public class UpdateChecker extends Fragment {
 	 * 
 	 * @see Dialog#show(android.support.v4.app.FragmentActivity)
 	 */
-	public void showDialog(AppVersionInfo info) {
-		// Dialog.show(mContext,info);
-		 Dialog d=new Dialog();
-         
-         Bundle args=new Bundle();
-         args.putString("content", info.updateMessage);
-         args.putString("url", info.url);
-			d.setArguments(args);
-         d.show(mContext.getSupportFragmentManager(), null);
+	public void showDialog(String content,String apkUrl) {
+		Dialog d = new Dialog();
+		Bundle args = new Bundle();
+		args.putString(Constants.APK_UPDATE_CONTENT, content);
+		args.putString(Constants.APK_DOWNLOAD_URL, apkUrl);
+		d.setArguments(args);
+		d.show(mContext.getSupportFragmentManager(), null);
 	}
 
 	/**
@@ -279,20 +232,16 @@ public class UpdateChecker extends Fragment {
 	 * 
 	 * @see Notification#show(android.content.Context, int)
 	 */
-	public void showNotification(AppVersionInfo info) {
+	public void showNotification(String content,String apkUrl) {
 		android.app.Notification noti;
-		Intent myIntent = new Intent(mContext,DownloadService.class);
-		myIntent.putExtra("url", info.url);
+		Intent myIntent = new Intent(mContext, DownloadService.class);
+		myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		myIntent.putExtra(Constants.APK_DOWNLOAD_URL, apkUrl);
 		PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
-		int smallIcon = 0;
-		if (mNotificationIconResId == 0) {
-			smallIcon = R.drawable.ic_stat_ic_menu_play_store;
-		} else {
-			smallIcon = mNotificationIconResId;
-		}
+
+		int smallIcon = mContext.getApplicationInfo().icon;
 		noti = new NotificationCompat.Builder(mContext).setTicker(getString(R.string.newUpdateAvailable))
-				.setContentTitle(getString(R.string.newUpdateAvailable)).setContentText(info.updateMessage).setSmallIcon(smallIcon)
+				.setContentTitle(getString(R.string.newUpdateAvailable)).setContentText(content).setSmallIcon(smallIcon)
 				.setContentIntent(pendingIntent).build();
 
 		noti.flags = android.app.Notification.FLAG_AUTO_CANCEL;
@@ -300,12 +249,7 @@ public class UpdateChecker extends Fragment {
 		notificationManager.notify(0, noti);
 	}
 
-	/**
-	 * Log connection error
-	 */
-	public void logConnectionError() {
-		Log.e(LOG_TAG, "Cannot connect to the Internet!");
-	}
+	
 
 	/**
 	 * Check if a network available
@@ -322,32 +266,5 @@ public class UpdateChecker extends Fragment {
 		return connected;
 	}
 
-	/**
-	 * Show the Dialog/Notification only if it is the first time or divisible
-	 * for 5.
-	 */
-	private boolean iDontWantToBeTooMuchInvasive(String versionDownloadable) {
-		String prefKey = INT_OF_LAUNCHES_PREF_KEY + versionDownloadable;
-		SharedPreferences prefs = mContext.getSharedPreferences(PREFS_FILENAME, 0);
-		int mChecksMade = prefs.getInt(prefKey, 0);
-		if (mChecksMade % mSuccessfulChecksRequired == 0 || mChecksMade == 0) {
-			saveNumberOfChecksForUpdatedVersion(versionDownloadable, mChecksMade);
-			return true;
-		} else {
-			saveNumberOfChecksForUpdatedVersion(versionDownloadable, mChecksMade);
-			return false;
-		}
-	}
-
-	/**
-	 * Update number of checks for the versionName of the version downloadable
-	 * from Play Store.
-	 */
-	private void saveNumberOfChecksForUpdatedVersion(String versionDownloadable, int mChecksMade) {
-		mChecksMade++;
-		SharedPreferences prefs = mContext.getSharedPreferences(PREFS_FILENAME, 0);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putInt(INT_OF_LAUNCHES_PREF_KEY + versionDownloadable, mChecksMade);
-		editor.commit();
-	}
+	
 }

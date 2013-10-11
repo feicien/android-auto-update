@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity {
 
 			@Override
 			public void onClick(View v) {
-				UpdateChecker.checkForNotification(R.drawable.ic_launcher, MainActivity.this);
+				UpdateChecker.checkForNotification(MainActivity.this);
 			}
 		});
 
