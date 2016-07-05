@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -191,7 +190,7 @@ public class UpdateChecker extends Fragment {
             String apkUrl = obj.getString(Constants.APK_DOWNLOAD_URL);
             int apkCode = obj.getInt(Constants.APK_VERSION_CODE);
 
-            int versionCode = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
+            int versionCode = AppUtils.getVersionCode(mContext);
 
             if (apkCode > versionCode) {
                 if (mTypeOfNotice == NOTICE_NOTIFICATION) {
@@ -203,7 +202,6 @@ public class UpdateChecker extends Fragment {
                 //Toast.makeText(mContext, mContext.getString(R.string.app_no_new_update), Toast.LENGTH_SHORT).show();
             }
 
-        } catch (PackageManager.NameNotFoundException ignored) {
         } catch (JSONException e) {
             Log.e(TAG, "parse json error", e);
         }
