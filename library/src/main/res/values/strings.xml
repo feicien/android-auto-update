@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="newUpdateAvailable">发现新版本</string>
-    <string name="dialogPositiveButton">立即下载</string>
-    <string name="dialogNegativeButton">以后再说</string>
-    <string name="app_no_new_update">没有发现新版本</string>
-    <string name="download_progress">正在下载:%1$d%%</string>
-    <string name="download_success">下载完成，点击安装</string>
-    
-   
+    <string name="android_auto_update_dialog_title">发现新版本</string>
+
+    <string name="android_auto_update_notify_ticker">发现新版本,点击进行升级</string>
+    <string name="android_auto_update_notify_content">发现新版本,点击进行升级</string>
+
+    <string name="android_auto_update_dialog_btn_download">立即下载</string>
+    <string name="android_auto_update_dialog_btn_cancel">以后再说</string>
+
+    <string name="android_auto_update_toast_no_new_update">已经是最新版本</string>
+
+    <string name="android_auto_update_download_progress">正在下载:%1$d%%</string>
+
+    <string name="android_auto_update_dialog_checking">正在检查版本</string>
+
+
 </resources>
