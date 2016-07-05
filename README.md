@@ -42,7 +42,7 @@ Android应用自动更新库(android-auto-update)
 ![screenshot](https://raw.github.com/feicien/android-auto-update/master/screenshots/downloading_avd.png)
 
 
-#### 4.使用与参考的开源项目 ####
+#### 4.参考 ####
 
 
 
