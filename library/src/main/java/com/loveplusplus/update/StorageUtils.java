@@ -31,11 +31,9 @@ import static android.os.Environment.MEDIA_MOUNTED;
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  * @since 1.0.0
  */
-public final class StorageUtils {
+final class StorageUtils {
 
     private static final String EXTERNAL_STORAGE_PERMISSION = "android.permission.WRITE_EXTERNAL_STORAGE";
-    //private static final String INDIVIDUAL_DIR_NAME = "uil-images";
-    private static final String TAG = "StorageUtils";
 
     private StorageUtils() {
     }
@@ -57,7 +55,7 @@ public final class StorageUtils {
             appCacheDir = context.getCacheDir();
         }
         if (appCacheDir == null) {
-            Log.w(TAG, "Can't define system cache directory! The app should be re-installed.");
+            Log.w(Constants.TAG, "Can't define system cache directory! The app should be re-installed.");
         }
         return appCacheDir;
     }
@@ -68,13 +66,13 @@ public final class StorageUtils {
         File appCacheDir = new File(new File(dataDir, context.getPackageName()), "cache");
         if (!appCacheDir.exists()) {
             if (!appCacheDir.mkdirs()) {
-                Log.w(TAG, "Unable to create external cache directory");
+                Log.w(Constants.TAG, "Unable to create external cache directory");
                 return null;
             }
             try {
                 new File(appCacheDir, ".nomedia").createNewFile();
             } catch (IOException e) {
-                Log.i(TAG, "Can't create \".nomedia\" file in application external cache directory");
+                Log.i(Constants.TAG, "Can't create \".nomedia\" file in application external cache directory");
             }
         }
         return appCacheDir;

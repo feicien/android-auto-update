@@ -12,7 +12,6 @@ import com.loveplusplus.update.UpdateChecker;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String APP_UPDATE_SERVER_URL = "https://raw.githubusercontent.com/feicien/android-auto-update/develop/extras/update.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                UpdateChecker.checkForDialog(MainActivity.this, APP_UPDATE_SERVER_URL);
+                UpdateChecker.checkForDialog(MainActivity.this);
             }
         });
         btn2.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                UpdateChecker.checkForNotification(MainActivity.this, APP_UPDATE_SERVER_URL);
+                UpdateChecker.checkForNotification(MainActivity.this);
             }
         });
 
