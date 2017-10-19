@@ -3,11 +3,6 @@
     package="com.loveplusplus.update.sample">
 
 
-    <!--  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 可选 ，如果添加这个权限 apk下载在sdcard中的Android/data/包名/cache目录下 否则下载到 内存中的 /data/data/包名/cache中 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -23,9 +18,7 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="com.loveplusplus.update.DownloadService"
-            android:exported="true" />
+
     </application>
 
 </manifest>
