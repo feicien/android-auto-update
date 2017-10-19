@@ -6,8 +6,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import java.io.File;
@@ -84,12 +86,12 @@ public class DownloadService extends IntentService {
             }
             // 下载完成
 
-            installAPk(apkFile);
+            installAPk(this, apkFile);
 
             mNotifyManager.cancel(NOTIFICATION_ID);
 
         } catch (Exception e) {
-            Log.e(TAG, "download apk file error");
+            Log.e(TAG, "download apk file error:" + e.getMessage());
         } finally {
             if (out != null) {
                 try {
@@ -118,20 +120,41 @@ public class DownloadService extends IntentService {
     }
 
 
-    private void installAPk(File apkFile) {
+    private void installAPk(Context context, File apkFile) {
+        Intent installAPKIntent = getApkInStallIntent(context, apkFile);
+        startActivity(installAPKIntent);
+    }
+
+    private Intent getApkInStallIntent(Context context, File apkFile) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        //如果没有设置SDCard写权限，或者没有sdcard,apk文件保存在内存中，需要授予权限才能安装
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".update.provider", apkFile);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        } else {
+            Uri uri = getApkUri(apkFile);
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        }
+        return intent;
+    }
+
+
+    private Uri getApkUri(File apkFile) {
+        Log.d(TAG, apkFile.toString());
+
+        //如果没有设置 SDCard 写权限，或者没有 SDCard,apk 文件保存在内存中，需要授予权限才能安装
         try {
             String[] command = {"chmod", "777", apkFile.toString()};
             ProcessBuilder builder = new ProcessBuilder(command);
             builder.start();
         } catch (IOException ignored) {
         }
-        intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+        Uri uri = Uri.fromFile(apkFile);
+        Log.d(TAG, uri.toString());
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-
+        return uri;
     }
 
 }

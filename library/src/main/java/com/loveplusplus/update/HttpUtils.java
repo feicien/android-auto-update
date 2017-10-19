@@ -36,7 +36,7 @@ public class HttpUtils {
             }
             result = strBuilder.toString();
         } catch (Exception e) {
-            Log.e(Constants.TAG, "http post error");
+            Log.e(Constants.TAG, "http  error");
         } finally {
             if (buffer != null) {
                 try {
