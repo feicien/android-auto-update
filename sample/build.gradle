@@ -2,19 +2,19 @@ apply plugin: 'com.android.application'
 
 
 dependencies {
-    compile project(':library')
-    compile "com.android.support:appcompat-v7:23.4.0"
+    implementation project(':library')
+    implementation "com.android.support:appcompat-v7:26.1.0"
 }
 
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.loveplusplus.update.sample"
-        minSdkVersion 8
-        targetSdkVersion 23
+        minSdkVersion 14
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -51,12 +51,6 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def newName = "android-auto-update-v${variant.versionName}.apk";
-            output.outputFile = new File(output.outputFile.parent, newName);
-        }
-    }
 
     lintOptions {
         abortOnError false
