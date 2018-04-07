@@ -1,21 +1,25 @@
 apply plugin: 'com.android.library'
 
-dependencies {
-    implementation 'com.android.support:support-v4:26.1.0'
-}
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 2
-        versionName '1.1'
+        targetSdkVersion 27
+        versionCode 3
+        versionName '1.2'
     }
 
+
+    //库项目不生成 BuildConfig
+    libraryVariants.all {
+        it.generateBuildConfig.enabled = false
+    }
 }
 
 
-
+dependencies {
+    implementation 'com.android.support:support-v4:27.1.0'
+}

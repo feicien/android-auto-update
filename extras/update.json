@@ -1,5 +1,5 @@
 {
-  "url":"https://raw.githubusercontent.com/feicien/android-auto-update/develop/extras/android-auto-update-v1.2.apk",
-  "versionCode":3,
-  "updateMessage":"1. 适配 Android 7.0"
+  "url":"https://raw.githubusercontent.com/feicien/android-auto-update/develop/extras/android-auto-update-v1.3.apk",
+  "versionCode":4,
+  "updateMessage":"1. 适配 Android 8.0\n2. 适配 Android 9.0\n3. 更新说明"
 }
