@@ -2,7 +2,7 @@ Android应用自动更新库(android-auto-update)
 ===================
 
 
-该library项目实现了软件版本检查，apk文件下载，软件安装（Android app update checker,download and install apk）支持API 8+
+该library项目实现了软件版本检查，apk文件下载，软件安装（Android app update checker,download and install apk）支持API 14+
 
 
 #### 1.导入library项目
