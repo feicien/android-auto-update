@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.text.Html;
 
 class UpdateDialog {
 
@@ -14,7 +13,7 @@ class UpdateDialog {
         if (isContextValid(context)) {
             new AlertDialog.Builder(context)
                     .setTitle(R.string.android_auto_update_dialog_title)
-                    .setMessage(Html.fromHtml(content))
+                    .setMessage(content)
                     .setPositiveButton(R.string.android_auto_update_dialog_btn_download, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             goToDownload(context, downloadUrl);
