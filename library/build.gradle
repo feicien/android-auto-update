@@ -1,8 +1,5 @@
 apply plugin: 'com.android.library'
 
-dependencies {
-    implementation 'com.android.support:support-v4:27.1.0'
-}
 
 android {
     compileSdkVersion 27
@@ -15,7 +12,14 @@ android {
         versionName '1.1'
     }
 
+
+    //库项目不生成 BuildConfig
+    libraryVariants.all {
+        it.generateBuildConfig.enabled = false
+    }
 }
 
 
-
+dependencies {
+    implementation 'com.android.support:support-v4:27.1.0'
+}
